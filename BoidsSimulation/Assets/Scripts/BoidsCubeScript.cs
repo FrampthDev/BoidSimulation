@@ -6,15 +6,21 @@ public class BoidsCubeScript : MonoBehaviour
 {
 
     [SerializeField] private  GameObject BoidPrefab;
-    Boid[] Boids= new Boid[10];
+    [SerializeField] private Vector3 ActionCube;
+    
+
+    [SerializeField] private int nBoids, BoidsVelocity;
+    private Boid[] Boids;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
-
+        Boids = new Boid[nBoids];
         for(int i = 0; i< Boids.Length; i++){
-            Boids[i] = new Boid(new Vector3(Random.Range(0f,10f),Random.Range(0f,10f),Random.Range(0f,10f)), new Vector3(Random.Range(0f,0.01f),Random.Range(0f,0.01f),Random.Range(0f,0.01f)));
+            Boids[i] = new Boid(new Vector3(Random.Range(0f,10f),Random.Range(0f,10f),Random.Range(0f,10f)), 
+            (Vector3.Normalize(new Vector3(Random.Range(0f,0.1f),Random.Range(0f,0.1f),Random.Range(0f,0.1f)))));
             //Show(Boids[i]);
         }
         
@@ -27,7 +33,7 @@ public class BoidsCubeScript : MonoBehaviour
         for (int i = 0; i<Boids.Length;i++){
             MoveBoid(ref Boids[i]);
         }
-        Debug.Log(Boids[0].GetPosition());
+        //Debug.Log(Boids[0].GetPosition());
     }
 
     private void Show(Boid b){
@@ -36,12 +42,20 @@ public class BoidsCubeScript : MonoBehaviour
 
     private void MoveBoid(ref Boid b){
 
-        b.SetPosition(b.GetPosition()+b.GetVelocity());
-        //b.SetPosition(new Vector3(0,0,0));
-        
-        
+
+        if ((b.GetPosition().x<-ActionCube.x/2 -transform.position.x || b.GetPosition().x>ActionCube.x/2 -transform.position.x) ||
+            (b.GetPosition().y<-ActionCube.y/2 -transform.position.y || b.GetPosition().y>ActionCube.y/2 -transform.position.y) ||
+            (b.GetPosition().z<-ActionCube.z/2 -transform.position.z || b.GetPosition().z>ActionCube.z/2 -transform.position.z)){
+                b.SetPosition(-b.GetPosition()+new Vector3(0.1f,0.1f,0.1f));
+            }
+        else {
+            b.SetPosition(b.GetPosition()+b.GetVelocity()*Time.deltaTime*BoidsVelocity);
+        }
+    
     }
     void OnDrawGizmos(){
+        
+        Gizmos.DrawWireCube(transform.position, ActionCube);
         foreach(Boid b in Boids){
             Gizmos.DrawSphere(b.GetPosition(),0.5f);
         }

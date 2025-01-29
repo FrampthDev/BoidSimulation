@@ -471,6 +471,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BoidPrefab: {fileID: 1684349507636635702, guid: e75aa069f43228f4d9f041fa191955ca, type: 3}
+  ActionCube: {x: 40, y: 40, z: 40}
+  nBoids: 1000
+  BoidsVelocity: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
